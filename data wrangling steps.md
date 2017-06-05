@@ -15,5 +15,5 @@ Steps:
 1. Gather all datasets in excel. 
 2. Tidy datasets. I cleaned up column names to be short and concise. 
 3. Consolidate data sets using dplyr in R.
-	+```{r} dropouts <- left_join(dropouts_May_2017, Drop_out_analysis2, by = "id")
+	+ ```{r} dropouts <- left_join(dropouts_May_2017, Drop_out_analysis2, by = "id")
 demo_drop <- left_join(dropouts, demographics, by = "id")```
