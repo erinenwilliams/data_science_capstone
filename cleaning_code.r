@@ -1,3 +1,4 @@
+
 # standardize locations
 all_loc <- All_Students %>%
   mutate(location = tolower(location)) %>% 
@@ -31,7 +32,6 @@ alphacol2$`Mod dropped out`[is.na(alphacol2$`Mod dropped out`)] <- 0
 
 #Calculate mean of Age
 27
-
 #Replace NAs with mean in Age column
 alphacol2$Age[is.na(alphacol2$Age)] <- 27
 
@@ -66,3 +66,22 @@ write_csv(alpha7, "alpha7.csv")
 
 #remove duplicate columns
 within(alldata, rm("student.x", "student.y", "Logic score.x", "Interviewer.x"))
+
+#remove NAs for Education, Behavior in program, Reason for withdrawal, referred by, and Salary
+alldata$Education[is.na(alldata$Education)] <- "Unknown"
+alldata$Salary[is.na(alldata$Salary)] <- "Unknown"
+alldata$`Behavior in program`[is.na(alldata$`Behavior in program`)] <- "acceptable"
+alldata$`Reason for withdrawal`[is.na(alldata$`Reason for withdrawal`)] <- "Did not withdraw"
+alldata$referred_by[is.na(alldata$referred_by)] <- "No response"
+
+#fill in race
+alldata$`Race/Ethnicity`[is.na(alldata$`Race/Ethnicity`)] <- "White"
+
+#fill in payment plan, quiz, logic score, and interviewer with 'unknown'
+alldata$int_logic_score[is.na(alldata$int_logic_score)] <- "Unknown"
+alldata$quiz[is.na(alldata$quiz)] <- "Unknown"
+alldata$interviewer[is.na(alldata$interviewer)] <- "Unknown"
+alldata$payment_plan[is.na(alldata$payment_plan)] <- "Unknown"
+
+#change zeros in quiz to TC for Try Coding
+alldata$quiz = gsub("0", "TC", alldata$quiz)
