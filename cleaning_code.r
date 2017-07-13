@@ -12,7 +12,6 @@ dropouts <- left_join(dropouts_May_2017, Drop_out_analysis2, by = "id")
 all_drop <- left_join(all_loc, dropouts, by = "id")
 all_demo <- left_join(all_drop, demographics, by = "id")
 
-
 #alphabetize column names
 alpha_col <- all_demo %>% select(noquote(order(colnames(all_demo))))
 
@@ -85,3 +84,7 @@ alldata$payment_plan[is.na(alldata$payment_plan)] <- "Unknown"
 
 #change zeros in quiz to TC for Try Coding
 alldata$quiz = gsub("0", "TC", alldata$quiz)
+alldata_clean$quiz = gsub("1:3", "TC", alldata_clean$quiz)
+
+#collapse payment plans into larger groups
+alldata_clean$payment_plan = gsub("Custom Payment Plan - .*", "Custom Payment Plan", alldata_clean$payment_plan)
