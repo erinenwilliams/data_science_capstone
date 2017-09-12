@@ -1,0 +1,18 @@
+#My original questions: 
+
+Students with which demographic characteristics are most likely to drop out? (race, gender, logic scores, payment plan)
+What are the "success rates" of different interviewers?
+Are students with higher logic scores more likely to be successful completing the program?
+Are there factors which make a student more likely to repeat?
+Can we calculate a student's likelihood of repeating and support them accordingly?
+
+#Machine learning questions: 
+
+How do you frame your main question as a machine learning problem? Is it a supervised or unsupervised problem? If it is supervised, is it a regression or a classification?
+- The main question is a supervised question, and can be found using logistic regression, since the independent variables are factors. However, I am having difficulty figuring out how to use all of them appropriately, as my dataset seems to be very different from a lot of the examples given in the exercises. 
+What are the main features (also called independent variables or predictors) that you'll use?
+- The main features that I can access easily are gender, logic scores, and age. I'd also like to be able to access race, payment plan, and previous job, but am having varying degrees of difficulty with those. Race doesn't seem to be reading as a factor, even though I've re-coded it as one several times. Payment plan currently has too many options, and I don't have enough data with this set for previous job for it to mean anything. 
+Which machine learning technique will you use?
+- I will use logistic regression and clustering to see which offers me a stronger response. 
+How will you evaluate the success of your machine learning technique? What metric will you use?
+Unsure
