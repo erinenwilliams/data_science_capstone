@@ -16,3 +16,87 @@ Which machine learning technique will you use?
 - I will use logistic regression and clustering to see which offers me a stronger response. 
 How will you evaluate the success of your machine learning technique? What metric will you use?
 Unsure
+
+
+#begin logistic regression
+grad.rate <- glm(graduated~age+GenderBinary, data=alldata_safe, family = "binomial")
+coef(summary(grad.rate))
+Estimate Std. Error    z value     Pr(>|z|)
+(Intercept)   2.02509935  0.5867000  3.4516777 0.0005571127
+age          -0.06459817  0.0189974 -3.4003696 0.0006729482
+GenderBinary  0.10238508  0.1810412  0.5655347 0.5717101456
+
+#new results from updated data
+grad.rate <- glm(graduated~age+GenderBinary+quiz+program, data=alldata_safe1, family = "binomial")
+> coef(summary(grad.rate))
+Estimate Std. Error    z value    Pr(>|z|)
+(Intercept)                 -1.17574319 1.09974519 -1.0691051 0.285022318
+age                         -0.02980253 0.02286065 -1.3036605 0.192349354
+GenderBinary                 0.07802921 0.23613223  0.3304471 0.741062152
+quiz                         0.33136250 0.10715650  3.0923227 0.001985968
+programBack End Engineering  0.60009560 0.26856045  2.2344899 0.025450858
+
+#transform coefficients to make them easier to interpret
+grad.rate.tab <- coef(summary(grad.rate))
+grad.rate.tab[, "Estimate"] <- exp(coef(grad.rate))
+grad.rate.tab
+
+Estimate Std. Error    z value    Pr(>|z|)
+(Intercept)                 0.3085896 1.09974519 -1.0691051 0.285022318
+age                         0.9706372 0.02286065 -1.3036605 0.192349354
+GenderBinary                1.0811542 0.23613223  0.3304471 0.741062152
+quiz                        1.3928646 0.10715650  3.0923227 0.001985968
+programBack End Engineering 1.8222930 0.26856045  2.2344899 0.025450858
+
+#How much more likely is a person with a quiz score of 8 to graduate than a person with 7,6, or 5? maybe this is l
+grad1 <- glm(graduated~quiz+age,
+               data=alldata_safe1, family="binomial")
+coef(summary(grad1))
+
+predData1 <- with(alldata_safe1,
+                 expand.grid(age = mean(age, na.rm = TRUE),
+                              GenderBinary = c(0,1),
+                              quiz = c(4, 5, 6, 7, 8), 
+                              program = c("Back End Engineering", "Front End Engineering")))
+
+# predict likelihood of graduating at those levels
+cbind(predData1, predict(grad1, type = "response",
+                        se.fit = TRUE, interval="confidence",
+                        newdata = predData1))
+age GenderBinary quiz               program       fit     se.fit residual.scale
+1  29.07912            0    4  Back End Engineering 0.4334528 0.08416925              1
+2  29.07912            1    4  Back End Engineering 0.4334528 0.08416925              1
+3  29.07912            0    5  Back End Engineering 0.5233101 0.06113067              1
+4  29.07912            1    5  Back End Engineering 0.5233101 0.06113067              1
+5  29.07912            0    6  Back End Engineering 0.6116834 0.03733316              1
+6  29.07912            1    6  Back End Engineering 0.6116834 0.03733316              1
+7  29.07912            0    7  Back End Engineering 0.6932759 0.02273575              1
+8  29.07912            1    7  Back End Engineering 0.6932759 0.02273575              1
+9  29.07912            0    8  Back End Engineering 0.7643296 0.02562388              1
+10 29.07912            1    8  Back End Engineering 0.7643296 0.02562388              1
+11 29.07912            0    4 Front End Engineering 0.4334528 0.08416925              1
+12 29.07912            1    4 Front End Engineering 0.4334528 0.08416925              1
+13 29.07912            0    5 Front End Engineering 0.5233101 0.06113067              1
+14 29.07912            1    5 Front End Engineering 0.5233101 0.06113067              1
+15 29.07912            0    6 Front End Engineering 0.6116834 0.03733316              1
+16 29.07912            1    6 Front End Engineering 0.6116834 0.03733316              1
+17 29.07912            0    7 Front End Engineering 0.6932759 0.02273575              1
+18 29.07912            1    7 Front End Engineering 0.6932759 0.02273575              1
+19 29.07912            0    8 Front End Engineering 0.7643296 0.02562388              1
+20 29.07912            1    8 Front End Engineering 0.7643296 0.02562388              1
+#How much more likely is one to graduate based on gender?
+grad.gen <- glm(graduated~age+GenderBinary,
+             data=alldata_safe1, family="binomial")
+# Create a dataset with predictors set at desired levels
+predData2 <- with(alldata_safe1,
+                expand.grid(age = mean(age, na.rm = TRUE),
+                            GenderBinary = c(0,1)))
+
+# predict success at those levels
+cbind(predData2, predict(grad.gen, type = "response",
+                       se.fit = TRUE, interval="confidence",
+                       newdata = predData2))
+
+age GenderBinary       fit     se.fit residual.scale
+1 29.07912            0 0.5908547 0.03652352              1
+2 29.07912            1 0.6198881 0.02439629              1
