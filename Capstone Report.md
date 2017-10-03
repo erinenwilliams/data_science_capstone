@@ -76,7 +76,7 @@ The first question I asked was a combination of questions 1 and 5 above: What is
 
 I started with the following glm call:
 
-log.reg.all <- glm(graduated~age+quiz+GenderBinary+AfAm+Asian+Indian+Latinx+White+MENA+veterans+BE+FE+enrollments+int_logic_score, data=alldata_safe1, family="binomial")
+```log.reg.all <- glm(graduated~age+quiz+GenderBinary+AfAm+Asian+Indian+Latinx+White+MENA+veterans+BE+FE+enrollments+int_logic_score, data=alldata_safe1, family="binomial")
 
 Call:  glm(formula = graduated ~ age + quiz + GenderBinary + AfAm + 
              Asian + Indian + Latinx + White + MENA + veterans + BE + 
@@ -132,13 +132,13 @@ Residual deviance: 341.12  on 424  degrees of freedom
 (157 observations deleted due to missingness)
 AIC: 367.12
 
-Number of Fisher Scoring iterations: 5
+Number of Fisher Scoring iterations: 5```
 
 Then broke it down further into separate racial categories. This way I could compare specific groups as well as look at the larger group of People of Color vs. White students. 
 
 Using this data, I calculated the following initial findings:
 
-new.MoC.quiz <- data.frame(age=27, White=0, GenderBinary=1, quiz=c(4:8), veterans=0, BE=1, int_logic_score=13, enrollments=4)
+```new.MoC.quiz <- data.frame(age=27, White=0, GenderBinary=1, quiz=c(4:8), veterans=0, BE=1, int_logic_score=13, enrollments=4)
 > predict(log.reg.white, new.MoC.quiz, type = "response")
 4        		 5         	6        	 	7        	 8 
 0.5491322 0.6456524 0.7316088 0.8030739 0.8591727 
@@ -156,7 +156,7 @@ new.MoC.quiz <- data.frame(age=27, White=0, GenderBinary=1, quiz=c(4:8), veteran
 > new.ytw.quiz <- data.frame(age=27, White=1, GenderBinary=0, quiz=c(4:8), veterans=0, BE=1, int_logic_score=13, enrollments=4)
 > predict(log.reg.white, new.ytw.quiz, type = "response")
 4         	5         	6         	7         8 
-0.6149554 0.7049554 0.7813970 0.8424596 0.8888908 
+0.6149554 0.7049554 0.7813970 0.8424596 0.8888908 ```
 
 (edited column headings for clarity)
 
@@ -179,7 +179,7 @@ Idea 1: For the second prediction model, I wanted to answer the following questi
 
 I used the following call: 
 
-lin.reg.repeat <- lm(repeats~age+quiz+GenderBinary+AfAm+Asian+Indian+Latinx+White+MENA+veterans+BE+FE+enrollments+int_logic_score, data=alldata_safe1)
+```lin.reg.repeat <- lm(repeats~age+quiz+GenderBinary+AfAm+Asian+Indian+Latinx+White+MENA+veterans+BE+FE+enrollments+int_logic_score, data=alldata_safe1)
 > lin.reg.repeat
 
 Call:
@@ -191,9 +191,9 @@ Coefficients:
     (Intercept)              age             quiz     GenderBinary             AfAm            Asian           Indian           Latinx            White             MENA         veterans               BE               FE  
         0.19235          0.01280         -0.05728          0.01348          0.11261         -0.21303         -0.26754         -0.17432         -0.24736               NA         -0.01701          0.04638               NA  
     enrollments  int_logic_score  
-        0.21120         -0.04229  
+        0.21120         -0.04229  ```
 
-> lin.reg.repeat <- lm(repeats~age+quiz+GenderBinary+AfAm+Asian+Indian+Latinx+White+veterans+BE+enrollments+int_logic_score, data=alldata_safe1)
+```> lin.reg.repeat <- lm(repeats~age+quiz+GenderBinary+AfAm+Asian+Indian+Latinx+White+veterans+BE+enrollments+int_logic_score, data=alldata_safe1)
 > lin.reg.repeat
 
 Call:
@@ -205,7 +205,7 @@ Coefficients:
     (Intercept)              age             quiz     GenderBinary             AfAm            Asian           Indian           Latinx            White         veterans               BE      enrollments  int_logic_score  
         0.19235          0.01280         -0.05728          0.01348          0.11261         -0.21303         -0.26754         -0.17432         -0.24736         -0.01701          0.04638          0.21120         -0.04229  
 
-> summary(lin.reg.repeat)
+```> summary(lin.reg.repeat)
 
 Call:
 lm(formula = repeats ~ age + quiz + GenderBinary + AfAm + Asian + 
@@ -237,7 +237,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 Residual standard error: 0.459 on 424 degrees of freedom
   (157 observations deleted due to missingness)
 Multiple R-squared:  0.2881,	Adjusted R-squared:  0.268 
-F-statistic:  14.3 on 12 and 424 DF,  p-value: < 2.2e-16
+F-statistic:  14.3 on 12 and 424 DF,  p-value: < 2.2e-16```
 
 Interpretation of results: 
 This initially shows that there is a relationship with being older, male, and/or African American and the likelihood of repeating. 
