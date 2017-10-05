@@ -312,3 +312,110 @@ new.MoC.quiz <- data.frame(age=27, White=0, GenderBinary=1, quiz=c(4:8), veteran
           
           Number of Fisher Scoring iterations: 5
           
+   #build training and test sets
+          > table(alldata_safe1$graduated)
+          
+          0   1 
+          232 362 
+         
+          > 362+232
+          [1] 594
+          > 362/594
+          [1] 0.6094276
+          > library("caTools", lib.loc="/Library/Frameworks/R.framework/Versions/3.3/Resources/library")
+          > set.seed(51)
+          > split <- sample.split(alldata_safe1$graduated, SplitRatio = 0.61)
+          > split
+          [1] FALSE  TRUE  TRUE FALSE  TRUE FALSE FALSE  TRUE FALSE  TRUE  TRUE  TRUE  TRUE FALSE  TRUE  TRUE FALSE  TRUE  TRUE FALSE  TRUE  TRUE  TRUE FALSE  TRUE  TRUE FALSE  TRUE  TRUE  TRUE FALSE  TRUE FALSE  TRUE  TRUE FALSE
+          [37]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE FALSE  TRUE  TRUE  TRUE FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE FALSE FALSE FALSE  TRUE  TRUE FALSE FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE
+          [73] FALSE  TRUE  TRUE FALSE  TRUE  TRUE  TRUE FALSE  TRUE FALSE FALSE  TRUE FALSE FALSE  TRUE  TRUE FALSE  TRUE  TRUE  TRUE FALSE FALSE  TRUE  TRUE  TRUE FALSE  TRUE  TRUE FALSE  TRUE  TRUE  TRUE  TRUE FALSE  TRUE FALSE
+          [109] FALSE FALSE FALSE  TRUE FALSE  TRUE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE FALSE  TRUE  TRUE FALSE  TRUE  TRUE FALSE  TRUE  TRUE FALSE FALSE  TRUE FALSE  TRUE FALSE FALSE  TRUE  TRUE FALSE FALSE  TRUE  TRUE FALSE
+          [145] FALSE  TRUE FALSE  TRUE FALSE FALSE  TRUE FALSE  TRUE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE  TRUE  TRUE  TRUE  TRUE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+          [181] FALSE  TRUE  TRUE  TRUE FALSE FALSE FALSE  TRUE  TRUE  TRUE  TRUE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE  TRUE FALSE  TRUE FALSE  TRUE FALSE  TRUE FALSE  TRUE
+          [217]  TRUE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE  TRUE FALSE  TRUE  TRUE  TRUE FALSE FALSE FALSE  TRUE  TRUE  TRUE  TRUE FALSE FALSE  TRUE  TRUE FALSE FALSE FALSE
+          [253] FALSE FALSE  TRUE  TRUE FALSE FALSE FALSE FALSE  TRUE  TRUE  TRUE  TRUE FALSE FALSE  TRUE FALSE  TRUE FALSE FALSE  TRUE  TRUE FALSE  TRUE  TRUE FALSE  TRUE  TRUE  TRUE  TRUE FALSE FALSE  TRUE FALSE  TRUE FALSE FALSE
+          [289] FALSE  TRUE  TRUE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE  TRUE  TRUE FALSE FALSE  TRUE  TRUE  TRUE FALSE FALSE  TRUE FALSE  TRUE FALSE  TRUE FALSE FALSE  TRUE FALSE  TRUE  TRUE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE
+          [325]  TRUE FALSE  TRUE  TRUE  TRUE FALSE  TRUE FALSE FALSE  TRUE  TRUE  TRUE FALSE FALSE FALSE  TRUE  TRUE  TRUE  TRUE FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE FALSE FALSE FALSE FALSE
+          [361]  TRUE FALSE  TRUE FALSE FALSE  TRUE FALSE  TRUE  TRUE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE FALSE  TRUE  TRUE FALSE  TRUE FALSE  TRUE FALSE  TRUE  TRUE FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE
+          [397] FALSE  TRUE FALSE FALSE FALSE  TRUE  TRUE FALSE FALSE  TRUE  TRUE FALSE FALSE  TRUE FALSE  TRUE FALSE FALSE  TRUE  TRUE  TRUE FALSE  TRUE FALSE  TRUE FALSE  TRUE  TRUE  TRUE FALSE  TRUE FALSE  TRUE  TRUE  TRUE  TRUE
+          [433] FALSE  TRUE  TRUE FALSE  TRUE FALSE  TRUE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE FALSE  TRUE FALSE  TRUE FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE  TRUE  TRUE  TRUE FALSE  TRUE FALSE
+          [469]  TRUE  TRUE FALSE  TRUE  TRUE  TRUE FALSE FALSE  TRUE  TRUE FALSE FALSE  TRUE FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE FALSE  TRUE FALSE  TRUE  TRUE  TRUE  TRUE FALSE  TRUE  TRUE  TRUE FALSE  TRUE FALSE
+          [505]  TRUE FALSE  TRUE FALSE FALSE  TRUE  TRUE  TRUE  TRUE FALSE  TRUE  TRUE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE  TRUE FALSE  TRUE  TRUE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE FALSE  TRUE FALSE
+          [541]  TRUE FALSE FALSE  TRUE FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE  TRUE FALSE FALSE  TRUE FALSE FALSE  TRUE  TRUE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE  TRUE FALSE  TRUE FALSE FALSE  TRUE  TRUE FALSE
+          [577] FALSE  TRUE  TRUE  TRUE  TRUE FALSE  TRUE  TRUE FALSE  TRUE FALSE  TRUE FALSE  TRUE  TRUE  TRUE FALSE  TRUE
+          > dataTrain = subset(alldata_safe1, split == TRUE)
+          > dataTest = subset(alldata_safe1, split == FALSE)
+          > nrow(dataTrain)
+          [1] 363
+          > nrow(dataTest)
+          [1] 231
+          > #run logistic regression on training set
+                                       > TrainLog <- glm(formula = graduated ~ age + quiz + GenderBinary + White + veterans + BE + int_logic_score + enrollments, family = "binomial", data = dataTrain) 
+                                       > summary(TrainLog)
+                                       
+                                       Call:
+                                         glm(formula = graduated ~ age + quiz + GenderBinary + White + 
+                                               veterans + BE + int_logic_score + enrollments, family = "binomial", 
+                                             data = dataTrain)
+                                       
+                                       Deviance Residuals: 
+                                         Min       1Q   Median       3Q      Max  
+                                       -3.2717  -0.3686   0.4581   0.5708   1.9461  
+                                       
+                                       Coefficients:
+                                         Estimate Std. Error z value Pr(>|z|)    
+                                       (Intercept)     -5.803227   2.158090  -2.689  0.00717 ** 
+                                         age             -0.056587   0.036457  -1.552  0.12062    
+                                       quiz             0.466038   0.190429   2.447  0.01439 *  
+                                         GenderBinary     0.188163   0.384596   0.489  0.62466    
+                                       White            0.362003   0.427645   0.847  0.39727    
+                                       veterans         1.023666   1.206281   0.849  0.39610    
+                                       BE               0.015956   0.470741   0.034  0.97296    
+                                       int_logic_score -0.003953   0.117845  -0.034  0.97324    
+                                       enrollments      1.323335   0.181674   7.284 3.24e-13 ***
+                                         ---
+                                         Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+                                       
+                                       (Dispersion parameter for binomial family taken to be 1)
+                                       
+                                       Null deviance: 330.58  on 270  degrees of freedom
+                                       Residual deviance: 216.62  on 262  degrees of freedom
+                                       (92 observations deleted due to missingness)
+                                       AIC: 234.62
+                                       
+                                       Number of Fisher Scoring iterations: 5
+                                       
+                                       > predictTrain <- predict(TrainLog, type = "response")
+                                       > summary(predictTrain)
+                                       Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+                                       0.01233 0.68720 0.85010 0.70110 0.89360 0.99790 
+                                      #create predicted set using TrainLog 
+                                       predicted <- predict(TrainLog, dataTest, type = "response")
+                                      #check for multicollinearity
+                                       vif(TrainLog)
+                                       age            quiz    GenderBinary           White        veterans              BE int_logic_score     enrollments 
+                                       1.076311        1.099675        1.073506        1.016048        1.087558        1.086935        1.143637        1.169370 
+                                       > 
+                                      #calculate misclassification errors
+                                      misClassError(dataTest$graduated, predicted, threshold = 0.5)
+                                       [1] 0.1212  
+                                      #ROC
+                                      > plotROC(dataTest$graduated, predicted) # 0.4493
+                                      > Concordance(dataTest$graduated, predicted)
+                                      $Concordance
+                                      [1] 0.8379237
+                                      
+                                      $Discordance
+                                      [1] 0.1620763
+                                      
+                                      $Tied
+                                      [1] -5.551115e-17
+                                      
+                                      $Pairs
+                                      [1] 5664
+                                      #plot confusion matrix - best threshold for lowest errors
+                                      > confusionMatrix(dataTest$graduated, predicted, threshold = 0.5)
+                                      0   1
+                                      0 32  12
+                                      1 16 106
+                                      > 
